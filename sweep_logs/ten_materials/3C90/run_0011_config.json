@@ -1,0 +1,37 @@
+{
+  "model_key": "SoftplusRateExpCapGRU",
+  "paper_normalization": "std_db_dt",
+  "run_name": "named_materials_expcap_bs16_lr_sweep_config50_20260525_140549_SoftplusRateExpCapGRU_3C90_bs16_phase3_lr12_0p0015_lr3_0p002",
+  "data_name": "3C90_softplus_std_db_dt",
+  "material": "3C90",
+  "stage": "phase3",
+  "process": {
+    "base_delta_t": 1.0,
+    "file_pattern_b": "3C90_(\\d+)_B.csv",
+    "file_pattern_h": "3C90_(\\d+)_H.csv",
+    "file_pattern_t": "3C90_(\\d+)_T.csv",
+    "max_len": 4000,
+    "min_len": 1000,
+    "split_seed": 42,
+    "test_split": 0.1,
+    "validation_split": 0.1
+  },
+  "train": {
+    "seed": 42,
+    "batch_size": 16,
+    "grad_clip_value": 20.0,
+    "lr_12": 0.0015,
+    "lr_3": 0.002,
+    "scheduler_patience": 4,
+    "seq_len12": 100,
+    "phase1_teacher_forcing_epochs": 50,
+    "warmup_len": 10,
+    "phase2_curriculum_transition_epochs": 50,
+    "seq_len3": 1000,
+    "phase3_finetuning_epochs": 150,
+    "phase3_patience": 12,
+    "eval_batch_size": 2048,
+    "eval_warmup_len": 100,
+    "plot_workers": 12
+  }
+}

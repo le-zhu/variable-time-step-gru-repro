@@ -1,0 +1,46 @@
+{
+  "model_key": "SoftplusRateHardcutGRU",
+  "dt_norm_mode": "max_dt_to_1",
+  "run_name": "paper_n87_hardcut_max_step_seed42",
+  "data_name": "paper_n87_hardcut_max_step_data",
+  "tasks": {
+    "process": false,
+    "pretrain": false,
+    "finetune": false,
+    "test": true,
+    "draw": false
+  },
+  "process": {
+    "file_pattern_b": "N87_(\\d+)_B\\.csv",
+    "file_pattern_h": "N87_(\\d+)_H\\.csv",
+    "file_pattern_t": "N87_(\\d+)_T\\.csv",
+    "input_dir": "",
+    "base_delta_t": 1.0,
+    "min_len": 1000,
+    "max_len": 4000,
+    "validation_split": 0.1,
+    "test_split": 0.1,
+    "split_seed": 42
+  },
+  "train": {
+    "seed": 42,
+    "batch_size": 16,
+    "scheduler_patience": 4,
+    "seq_len12": 100,
+    "phase1_teacher_forcing_epochs": 50,
+    "warmup_len": 10,
+    "phase2_curriculum_transition_epochs": 50,
+    "seq_len3": 1000,
+    "phase3_finetuning_epochs": 150,
+    "phase3_patience": 12,
+    "eval_batch_size": 2048,
+    "eval_warmup_len": 100,
+    "plot_workers": 12,
+    "sdt_penalty_weight": 0.0,
+    "sdt_penalty_threshold": 0.9,
+    "grad_clip_value": 20.0,
+    "lr_12": 0.001,
+    "lr_3": 0.004,
+    "device": "auto"
+  }
+}

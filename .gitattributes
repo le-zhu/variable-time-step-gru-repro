@@ -1,0 +1,3 @@
+# Normalize archived text logs to LF so manifest SHA-256 values remain portable.
+sweep_logs/**/*.csv text eol=lf
+sweep_logs/**/*.json text eol=lf

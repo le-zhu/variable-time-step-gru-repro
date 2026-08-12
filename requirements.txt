@@ -1,0 +1,8 @@
+# Validation environment of this repository (Python 3.12.0): the versions in
+# which the released checkpoints load and every command in README.md was run.
+numpy==2.3.3
+scipy==1.17.1
+torch==2.10.0
+matplotlib==3.10.8
+tqdm==4.67.3
+pytest==9.0.3

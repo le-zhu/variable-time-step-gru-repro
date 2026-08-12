@@ -1,0 +1,62 @@
+# Python caches and test output
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments and local configuration
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+# Editors and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local runs and generated artifacts
+runs/
+logs/
+tmp/
+results/
+figures/output/
+*.log
+*.zip
+*.tar
+*.tar.gz
+
+# Data stays outside Git; the selected paper checkpoints are released below
+data/*
+!data/README.md
+checkpoints/*
+!checkpoints/README.md
+!checkpoints/manifest.json
+!checkpoints/n87_paper_models/
+!checkpoints/n87_paper_models/**
+!checkpoints/ten_material_rategru/
+!checkpoints/ten_material_rategru/**
+*.npy
+*.npz
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.ckpt
+*.pkl
+
+# Explicitly retain only the selected release checkpoints
+!checkpoints/n87_paper_models/**/*.pth
+!checkpoints/ten_material_rategru/**/*.pth
+
+# Credentials and private keys
+*password*
+*credential*
+*.pem
+*.key
+id_rsa*
+id_ed25519*
