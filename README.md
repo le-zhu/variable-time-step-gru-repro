@@ -36,7 +36,7 @@ so the checkpoint folders carry a `_max_step` suffix for the Max-step variant.
 - Sanitized training logs for the paper-reported hyperparameter searches
 - Scripts for every reported metric: held-out and resampled sequence error,
   core-loss error, and the sampling-interval experiments
-- Generators for all eleven manuscript figures
+- Generators for all thirteen manuscript figures
 
 ## Layout
 
@@ -171,8 +171,8 @@ both up- and downsampling for two models and took about an hour on one GPU.
 ## Figures
 
 `figures/README.md` maps every manuscript figure to the script that draws it and
-gives the commands. Five figures are schematics and need nothing but the
-repository:
+gives the commands. Six figures need nothing but the repository, the five
+schematics and the literature comparison:
 
 ```powershell
 python -m figures.plot_model_overview
@@ -180,10 +180,11 @@ python -m figures.plot_data_processing_pipeline
 python -m figures.plot_three_stage_training
 python -m figures.plot_limiter_function_comparison
 python -m figures.plot_update_regimes
+python -m figures.plot_ten_material_comparison
 ```
 
 The rest read a released checkpoint, a processed split, or the CSV written by a
-sampling-interval run. Two of them are drawn by the sampling-interval scripts in
+sampling-interval or cross-material evaluation run. Two of them are drawn by the sampling-interval scripts in
 `scripts/`, because the pass that computes the reported numbers also renders the
 figure. All output goes to `figures/output/`, which is not tracked.
 

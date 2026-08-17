@@ -25,8 +25,10 @@ needs `--copy-to-paper` to do it at all.
 | `uniform_waveforms_16_32.pdf` | `scripts/evaluate_n87_longest_downsample.py` | RateGRU checkpoint, processed N87 |
 | `update_coeff_downsampling_diagnostics.pdf` | `figures/plot_update_coeff_downsampling_single_column.py` | the summary CSV below |
 | `random_interval_representative_zoom_points_1to10_window750_meanlike.pdf` | `figures/plot_random_interval_representative_zoom.py` | RateGRU checkpoint, processed N87 |
+| `restest_step_reduction.pdf` | `figures/plot_restest_step_reduction.py` | the ten evaluation outputs below |
+| `ten_material_error_comparison.pdf` | `figures/plot_ten_material_comparison.py` | nothing |
 
-The five schematics take no arguments:
+The six figures that need nothing take no arguments:
 
 ```powershell
 python -m figures.plot_model_overview
@@ -34,7 +36,26 @@ python -m figures.plot_data_processing_pipeline
 python -m figures.plot_three_stage_training
 python -m figures.plot_update_regimes
 python -m figures.plot_limiter_function_comparison
+python -m figures.plot_ten_material_comparison
 ```
+
+The comparison figure carries no data dependency because every value in it is
+transcribed from a published table; its docstring names the three sources.
+
+The cost figure reads the same evaluation that produces the Test and ResTest
+columns of the cross-material table. Run it once per material into its own
+subdirectory, then point the figure at the parent:
+
+```powershell
+python scripts/evaluate_resampled_holdout.py --checkpoint material:N87 `
+  --processed-data-dir <processed split for N87> `
+  --out-dir results\restest\N87
+python -m figures.plot_restest_step_reduction --results-dir results\restest
+```
+
+Step totals are summed from each `resampled_holdout_row_errors.csv`; the plotted
+errors are read from each `resampled_holdout_summary.json` rather than
+recomputed, so the P95 is the statistic the evaluator reported.
 
 The update-coefficient figure is drawn in two steps. The diagnostics pass
 computes the per-factor statistics of `dt * u_t` and `expcap(dt * s_t)` and

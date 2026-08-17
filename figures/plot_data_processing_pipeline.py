@@ -76,7 +76,7 @@ STAGES = (
         r"$B/\mathrm{R}(B)$, $H/\mathrm{R}(H)$; Max-step or RMS-slope",
     )),
     Stage(DATA, "Model input", (
-        r"$\mathbf{x}_t=[\,B_t,\ (\mathrm{d}B/\mathrm{d}t)_t,\ H_t,\ T\,]^{\top}$ and $\mathrm{d}t_t$",
+        r"$\mathbf{x}_t=[\,B_t,\ (\mathrm{d}B/\mathrm{d}t)_t,\ H_t,\ T\,]^{\top}$",
     )),
 )
 

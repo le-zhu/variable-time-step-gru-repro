@@ -24,6 +24,8 @@ PAPER_FIGURE_SIZES_IN = {
     "downsample_32x_input_distortion_zoom": (COLUMNWIDTH_IN, 2.050),
     "random_interval_representative_zoom_points_1to10_window750_meanlike": (TEXTWIDTH_IN, 1.869),
     "update_coeff_sampling_diagnostics_combined": (TEXTWIDTH_IN, 3.850),
+    "restest_step_reduction": (TEXTWIDTH_IN, 2.750),
+    "ten_material_error_comparison": (TEXTWIDTH_IN, 2.850),
 }
 
 ORIGINAL_FIGURE_WIDTHS_IN = {
@@ -44,6 +46,8 @@ ORIGINAL_FIGURE_WIDTHS_IN = {
     "downsample_32x_input_distortion_zoom": 14.4,
     "random_interval_representative_zoom_points_1to10_window750_meanlike": 12.8,
     "update_coeff_sampling_diagnostics_combined": 14.4,
+    "restest_step_reduction": TEXTWIDTH_IN,
+    "ten_material_error_comparison": TEXTWIDTH_IN,
 }
 
 
