@@ -1,8 +1,7 @@
 """Random nonuniform grids on every resampled frequency group of one material.
 
-This generalizes ``evaluate_n87_longest_random_interval`` from the longest N87
-group to every frequency group of any released checkpoint, and produces the
-nonuniform-grid table of the revised manuscript (N87, five frequency groups)
+Evaluates every resampled frequency group of a released checkpoint and produces
+the nonuniform-grid table of the revised manuscript (N87, five frequency groups)
 as well as the ten-material extension in the review response.
 
 Grid construction is the one of ``make_random_interval_batch``: the retained
@@ -11,8 +10,8 @@ random integer in ``[1, max_step]`` original steps, and sampling stops before
 the next index would pass the end of the sequence. The trailing partial
 interval is discarded, so every retained interval is bounded by two measured
 points. By default ``max_step`` is the group's own training downsampling factor,
-``ceil(length / max_len)``, so a random step never leaves the sampling density
-the model was trained on; groups whose factor is 1 (800 and 500 kHz) carry no
+``ceil(length / max_len)``, so that the single-step length does not exceed the
+training range; groups whose factor is 1 (800 and 500 kHz) carry no
 variable step and are skipped. Each seed draws one grid per group, all seeds of
 a group are rolled out in one batch, and the same rows are also evaluated on
 the original measured grid (stride 1) as the comparison column.

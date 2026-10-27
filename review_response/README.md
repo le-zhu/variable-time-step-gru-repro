@@ -1,8 +1,9 @@
-# Analyses Reported in the Response to Reviewers
+# Analyses Carried Out in Response to the Reviewers
 
-This folder holds the code for results that appear only in the response to the
-reviewers of the first revision. None of them is part of the manuscript, and
-none of them retrains a model: every script reads a released checkpoint from
+This folder holds the code for the analyses carried out in response to the
+reviewers of the first revision. Their results are reported in the response
+letter; the warmup-length sensitivity is also summarized in Section VI of the
+revised manuscript. None of them retrains a model: every script reads a released checkpoint from
 `checkpoints/` and a processed split written by `scripts/run_paper_experiment.py`.
 
 | Response item | Folder | Needs | Run time |

@@ -4,7 +4,8 @@ Rolls the released N87 RateGRU (`n87:rategru`) out on the processed N87 test
 split with no warmup, the measured initial H only, and warmups of 10, 50, 100,
 500, and 1000 points, scoring every setting on the same two fixed windows
 (after point 100 and after point 1000). This is the warmup table of the
-response letter; nothing is retrained.
+response letter, summarized in Section VI of the revised manuscript; nothing is
+retrained.
 
 ```powershell
 python -m review_response.warmup.sensitivity `

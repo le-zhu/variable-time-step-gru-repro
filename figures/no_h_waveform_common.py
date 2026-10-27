@@ -1,4 +1,4 @@
-"""Sequence loading and rollout helpers shared by the RateGRU-NF (No-H) waveform figure.
+"""Sequence loading and rollout helpers shared by the RateGRU-NF waveform figure.
 
 Split out of the working error-accumulation script so that only the manuscript
 figure remains an entry point. ``evaluate_rows`` takes an optional

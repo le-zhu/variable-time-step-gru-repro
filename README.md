@@ -31,8 +31,10 @@ their folders keep the old names.
 
 Version 1.1.0 follows the first revision of the manuscript: it adds the two
 models of the revised comparison, DtInputGRU and RateGRU-Orig, the scripts for
-the revised tables and figures, and `review_response/`, the code for results
-reported only in the response to the reviewers.
+the revised tables and figures, and `review_response/`, the code for the
+analyses carried out in response to the reviewers. Their results are reported
+in the response letter; the warmup-length test is also summarized in Section VI
+of the revised manuscript.
 
 ## Current contents
 
@@ -47,8 +49,8 @@ reported only in the response to the reviewers.
 - Scripts for every reported metric: held-out and resampled sequence error,
   core-loss error, and the sampling-interval experiments
 - Generators for all thirteen manuscript figures
-- `review_response/`: the analyses reported only in the response to the
-  reviewers, including a zero-shot comparison with TimesFM-3
+- `review_response/`: the analyses carried out in response to the reviewers,
+  including a zero-shot comparison with TimesFM-3
 
 ## Layout
 
@@ -59,7 +61,7 @@ checkpoints/          released weights, run configurations, and checksums
 scripts/              command entry points: train, verify, evaluate
 figures/              manuscript figure generators and their shared style
 sweep_logs/           sanitized per-run training logs of the two paper searches
-review_response/      analyses reported only in the response to the reviewers
+review_response/      analyses carried out in response to the reviewers
 tests/                loading, configuration, and archive-consistency checks
 data/                 format description only; no data ships here
 ```

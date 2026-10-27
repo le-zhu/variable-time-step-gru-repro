@@ -66,8 +66,7 @@ MODEL_SPECS = {
         "data_dir": DEFAULT_DATA_DIR,
         "ymax": 50.0,
     },
-    # DtInputGRU enters only the revised low-frequency downsampling figure, so
-    # only those cases are evaluated for it.
+    # DtInputGRU is configured for the low-frequency downsampling cases of Fig. 8.
     "dtinputgru": {
         "title": "DtInputGRU on N87 frequency-group diagnostics",
         "paper_stem": "dtinputgru_longest_sampling_interval_error",
@@ -88,7 +87,7 @@ PAPER_MODEL_LABELS = {
     "DtInputFixedGRU": "DtInputGRU",
 }
 DEFAULT_MODELS = ["dtscaledgru", "rategru", "dtinputgru"]
-# Panels of the upsampling overview; DtInputGRU is not evaluated for it.
+# Panels of the upsampling overview.
 UPSAMPLING_OVERVIEW_MODELS = ["dtscaledgru", "rategru"]
 LOW2_STEM = "n87_sampling_downsampling_low2_with_dtinput"
 LOW2_SIZE_KEY = "n87_sampling_downsampling_low2"
@@ -741,8 +740,7 @@ def save_plots(
     upsample_ticks = [item for item in LOG_TICKS if 1.0 / 36.0 <= item[0] <= 10.0]
     downsample_ticks = [item for item in LOG_TICKS if 1.0 <= item[0] <= 36.0]
     all_lengths = sorted({int(row["selected_length"]) for row in rows}, key=frequency_khz)
-    # The upsampling overview is a working figure that the revised manuscript
-    # does not show; draw it only for models that have upsampling rows.
+    # Draw the upsampling overview for the models that have upsampling rows.
     upsampled_models = {str(row["model"]) for row in rows if str(row["sampling"]) == "upsample"}
     overview_models = [name for name in models if name in UPSAMPLING_OVERVIEW_MODELS and name in upsampled_models]
     if overview_models:

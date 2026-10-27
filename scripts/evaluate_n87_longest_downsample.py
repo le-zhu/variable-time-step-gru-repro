@@ -511,7 +511,7 @@ def main():
 
     factors = list(args.factors) if args.factors is not None else list(range(args.start_factor, args.end_factor + 1))
     factors = sorted(dict.fromkeys(factors))
-    if factors != list(range(1, 21)):
+    if factors != list(range(1, max(PAPER_WAVEFORM_FACTORS) + 1)):
         print(f"Using custom factors: {factors}")
     representative_selection_factor = 1 if 1 in factors else factors[0]
 

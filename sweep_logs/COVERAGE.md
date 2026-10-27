@@ -29,8 +29,8 @@ duplication in the archive; `manifest.csv` lists 239 rows for 234 distinct runs.
 | HardCutRateGRU, RMS-slope | 0.002, 0.004, 0.006, 0.008, 0.010 |
 | GlobalExpRateGRU, Max-step | 0.002, 0.004, 0.006, 0.008 |
 | GlobalExpRateGRU, RMS-slope | 0.002, 0.004, 0.006, 0.008, 0.010 |
-| RateGRU-32 (Hidden32) | 0.002, 0.004, 0.006, 0.008 |
-| RateGRU-NF (No-H) | 0.002, 0.004, 0.006, 0.008 |
+| RateGRU-32 | 0.002, 0.004, 0.006, 0.008 |
+| RateGRU-NF | 0.002, 0.004, 0.006, 0.008 |
 | DtInputGRU, RMS-slope | 0.002, 0.004, 0.006, 0.008, 0.010 |
 | RateGRU-Orig, RMS-slope | 0.002, 0.004, 0.006, 0.008 |
 
@@ -40,10 +40,8 @@ checkpoint. Its validation error did not improve on the selected `lr3=0.008`
 result.
 
 DtInputGRU and RateGRU-Orig were added in the revision (folders
-`dtinput_rms_slope/` and `rategru_orig_rms_slope/`). RateGRU-Orig was trained from the original-grid processed split
-(`max_len = 40000`); the server run skipped preprocessing and read that split
-directly, so its own configuration carried the unused default `max_len = 4000`,
-which the archived configurations replace with the value that built the data.
+`dtinput_rms_slope/` and `rategru_orig_rms_slope/`). RateGRU-Orig is trained on the
+original grid, like FixedGRU, from a processed split built with `max_len = 40000`.
 
 ## Per-material search
 

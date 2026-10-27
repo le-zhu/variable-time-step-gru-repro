@@ -38,7 +38,7 @@ PLOT_WINDOW = (0, 2000)
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Generate or replot the RateGRU-NF (No-H) initial-sync paper figure (Fig. 7).")
+    parser = argparse.ArgumentParser(description="Generate or replot the RateGRU-NF initial-sync paper figure (Fig. 7).")
     parser.add_argument("--plot-only-cache", type=Path, default=None, help="Replot from a saved NPZ cache without model inference.")
     parser.add_argument("--output-dir", type=Path, default=None, help="Output directory. Defaults to a timestamped directory under results/.")
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR, help="Processed N87 split (std_db_dt); defaults to data/N87_processed.")
@@ -219,7 +219,7 @@ def plot_initial_sync_comparison(
         0.075,
         0.02,
         (
-            f"No-H initial/later mean |error|: "
+            f"RateGRU-NF initial/later mean |error|: "
             f"{candidate['no_h_initial_mean_abs_error']:.2f} -> {candidate['no_h_later_mean_abs_error']:.2f}"
         ),
         ha="left",
@@ -263,7 +263,7 @@ def plot_candidates_overview(
         row_idx = candidate_row_index(candidate)
         title = (
             f"#{rank} row={row_idx}, "
-            f"No-H {candidate['no_h_initial_mean_abs_error']:.2f}->{candidate['no_h_later_mean_abs_error']:.2f}"
+            f"RateGRU-NF {candidate['no_h_initial_mean_abs_error']:.2f}->{candidate['no_h_later_mean_abs_error']:.2f}"
         )
         row_axes = axes[rank - 1]
         series = [

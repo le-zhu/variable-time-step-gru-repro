@@ -12,30 +12,30 @@ under `results/` and place only the manuscript PDF in `figures/output/`:
 `--no-copy-to-paper` to suppress it, while `evaluate_n87_frequency_groups.py`
 needs `--copy-to-paper` to do it at all.
 
-| Manuscript file | Generator | Needs |
-| --- | --- | --- |
-| `transient_prediction_task.pdf` | `figures/plot_transient_task_overview.py` | processed N87 |
-| `model_overview.pdf` | `figures/plot_model_overview.py` | nothing |
-| `data_processing_pipeline.pdf` | `figures/plot_data_processing_pipeline.py` | nothing |
-| `three_stage_training.pdf` | `figures/plot_three_stage_training.py` | nothing |
-| `update_regimes.pdf` | `figures/plot_update_regimes.py` | nothing |
-| `limiter_function_comparison.pdf` | `figures/plot_limiter_function_comparison.py` | nothing |
-| `no_h_initial_sync_comparison.pdf` | `figures/plot_no_h_initial_sync_waveform.py` | RateGRU and RateGRU-NF (`no_h`) checkpoints, processed N87 |
-| `n87_sampling_downsampling_low2_with_dtinput.pdf` | `scripts/evaluate_n87_frequency_groups.py` | DtScaledGRU, RateGRU, and DtInputGRU checkpoints, processed N87 |
-| `uniform_waveforms_16_32.pdf` | `scripts/evaluate_n87_longest_downsample.py` | RateGRU checkpoint, processed N87 |
-| `update_coeff_downsampling_diagnostics.pdf` | `figures/plot_update_coeff_downsampling_single_column.py` | the summary CSV below |
-| `random_interval_representative_zoom_points_1to9_window750_meanlike.pdf` | `figures/plot_random_interval_representative_zoom.py` | RateGRU checkpoint, processed N87 |
-| `restest_step_reduction.pdf` | `figures/plot_restest_step_reduction.py` | the ten evaluation outputs below |
-| `ten_material_error_comparison.pdf` | `figures/plot_ten_material_comparison.py` | nothing |
+| Fig. | Manuscript file | Generator | Needs |
+| --- | --- | --- | --- |
+| 1 | `transient_prediction_task.pdf` | `figures/plot_transient_task_overview.py` | processed N87 |
+| 2 | `model_overview.pdf` | `figures/plot_model_overview.py` | nothing |
+| 3 | `update_regimes.pdf` | `figures/plot_update_regimes.py` | nothing |
+| 4 | `limiter_function_comparison.pdf` | `figures/plot_limiter_function_comparison.py` | nothing |
+| 5 | `data_processing_pipeline.pdf` | `figures/plot_data_processing_pipeline.py` | nothing |
+| 6 | `three_stage_training.pdf` | `figures/plot_three_stage_training.py` | nothing |
+| 7 | `no_h_initial_sync_comparison.pdf` | `figures/plot_no_h_initial_sync_waveform.py` | RateGRU and RateGRU-NF (`no_h`) checkpoints, processed N87 |
+| 8 | `n87_sampling_downsampling_low2_with_dtinput.pdf` | `scripts/evaluate_n87_frequency_groups.py` | DtScaledGRU, RateGRU, and DtInputGRU checkpoints, processed N87 |
+| 9 | `uniform_waveforms_16_32.pdf` | `scripts/evaluate_n87_longest_downsample.py` | RateGRU checkpoint, processed N87 |
+| 10 | `update_coeff_downsampling_diagnostics.pdf` | `figures/plot_update_coeff_downsampling_single_column.py` | the summary CSV below |
+| 11 | `random_interval_representative_zoom_points_1to9_window750_meanlike.pdf` | `figures/plot_random_interval_representative_zoom.py` | RateGRU checkpoint, processed N87 |
+| 12 | `restest_step_reduction.pdf` | `figures/plot_restest_step_reduction.py` | the ten evaluation outputs below |
+| 13 | `ten_material_error_comparison.pdf` | `figures/plot_ten_material_comparison.py` | nothing |
 
 The six figures that need nothing take no arguments:
 
 ```powershell
 python -m figures.plot_model_overview
-python -m figures.plot_data_processing_pipeline
-python -m figures.plot_three_stage_training
 python -m figures.plot_update_regimes
 python -m figures.plot_limiter_function_comparison
+python -m figures.plot_data_processing_pipeline
+python -m figures.plot_three_stage_training
 python -m figures.plot_ten_material_comparison
 ```
 
@@ -91,7 +91,7 @@ python -m figures.plot_no_h_initial_sync_waveform --output-dir results\no_h_init
 Fig. 8, low-frequency downsampling for DtScaledGRU, RateGRU, and DtInputGRU.
 `--low2-only` evaluates just the 80 and 50 kHz downsampling cases the figure
 draws; without it the script also runs the upsampling and training-range cases
-of the full diagnostics, which DtInputGRU skips:
+of the full diagnostics for DtScaledGRU and RateGRU:
 
 ```powershell
 python -m scripts.evaluate_n87_frequency_groups --low2-only --copy-to-paper
