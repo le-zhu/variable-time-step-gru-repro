@@ -49,6 +49,11 @@ checkpoints/*
 *.ckpt
 *.pkl
 
+# Third-party TimesFM-3 weights (non-commercial license); fetched by
+# review_response/timesfm3/download_model.py, never committed
+review_response/timesfm3/model/
+review_response/timesfm3/.venv/
+
 # Explicitly retain only the selected release checkpoints
 !checkpoints/n87_paper_models/**/*.pth
 !checkpoints/ten_material_rategru/**/*.pth

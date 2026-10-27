@@ -1,0 +1,5 @@
+{
+  "src/timesfm3/torch/timesfm3_forecaster.py": "33870c9676be6aab4e62c45a0a89bc1d6c49ca3149ddc46a19c6d9e2c23e0037",
+  "src/timesfm3/torch/model.py": "474b8035db514d852e6358c73ebd1ba90dcd25f17d1ecf4e5bb884ca788e7dbf",
+  "src/timesfm3/torch/evaluator.py": "4ad0ddc5e264206cf6db706b493c2b4f20bf6698e89b990a4c37c15089971af2"
+}

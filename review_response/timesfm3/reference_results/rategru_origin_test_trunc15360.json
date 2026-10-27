@@ -1,0 +1,74 @@
+{
+  "model": "RateGRU",
+  "checkpoint": "n87_paper_models/rategru/model.pth",
+  "checkpoint_sha256": "d10f66715ea4c409c2fc0e2f851813dd6581111685e96d4a1a23840e5d0fbdf8",
+  "split": "origin_test",
+  "context_limit": 15360,
+  "protocol": "first `cut` points receive the measured H, then free running; per-sequence relative RMS over the remaining points",
+  "device": "cuda",
+  "rows": [
+    {
+      "fraction": 0.1,
+      "n_scored": 1261,
+      "mean_rel_rms": 0.03278061639573676,
+      "median_rel_rms": 0.031070485711097717,
+      "p95_rel_rms": 0.050164103507995605
+    },
+    {
+      "fraction": 0.2,
+      "n_scored": 1261,
+      "mean_rel_rms": 0.03243600424160497,
+      "median_rel_rms": 0.030865460634231567,
+      "p95_rel_rms": 0.049502115696668625
+    },
+    {
+      "fraction": 0.3,
+      "n_scored": 1261,
+      "mean_rel_rms": 0.032523983764527906,
+      "median_rel_rms": 0.03101472742855549,
+      "p95_rel_rms": 0.04956776648759842
+    },
+    {
+      "fraction": 0.4,
+      "n_scored": 1261,
+      "mean_rel_rms": 0.03283670347059865,
+      "median_rel_rms": 0.031185144558548927,
+      "p95_rel_rms": 0.050945524126291275
+    },
+    {
+      "fraction": 0.5,
+      "n_scored": 1261,
+      "mean_rel_rms": 0.03316730729464521,
+      "median_rel_rms": 0.03127514198422432,
+      "p95_rel_rms": 0.05107961967587471
+    },
+    {
+      "fraction": 0.6,
+      "n_scored": 1261,
+      "mean_rel_rms": 0.03370538971059668,
+      "median_rel_rms": 0.03162505850195885,
+      "p95_rel_rms": 0.05406995490193367
+    },
+    {
+      "fraction": 0.7,
+      "n_scored": 1261,
+      "mean_rel_rms": 0.03467871914532783,
+      "median_rel_rms": 0.03221060335636139,
+      "p95_rel_rms": 0.05778318643569946
+    },
+    {
+      "fraction": 0.8,
+      "n_scored": 1261,
+      "mean_rel_rms": 0.03640172560163829,
+      "median_rel_rms": 0.03303629904985428,
+      "p95_rel_rms": 0.06530144065618515
+    },
+    {
+      "fraction": 0.9,
+      "n_scored": 1261,
+      "mean_rel_rms": 0.0391057431491049,
+      "median_rel_rms": 0.03387104347348213,
+      "p95_rel_rms": 0.07720006257295609
+    }
+  ]
+}

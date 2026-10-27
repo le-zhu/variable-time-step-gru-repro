@@ -1,0 +1,36 @@
+{
+  "repo_id": "google/timesfm-3.0-pytorch",
+  "revision": "43046b85ec22d584a13f8098c2ed39c889e129c2",
+  "files": [
+    {
+      "rfilename": ".gitattributes",
+      "blobId": "a6344aac8c09253b3b630fb776ae94478aa0275b",
+      "size": 1519
+    },
+    {
+      "rfilename": "LICENSE",
+      "blobId": "a91b931cb18b7c36e501366a4acec4cc51abc2d3",
+      "size": 7270
+    },
+    {
+      "rfilename": "README.md",
+      "blobId": "98c2720f9d51017934ec873c8b0a419b8428bb9b",
+      "size": 1436
+    },
+    {
+      "rfilename": "config.json",
+      "blobId": "c1de41214b9c86940224b802a0d1744d65ad7781",
+      "size": 1273
+    },
+    {
+      "rfilename": "model.safetensors",
+      "blobId": "8c1bfefdfab936c302b14c25f46265e65805d7c5",
+      "size": 1322898824,
+      "lfs": {
+        "sha256": "a7592b0a8432baee54483254e5647856911ce69e09d09a9bb65904b2d98f17da",
+        "size": 1322898824,
+        "pointerSize": 135
+      }
+    }
+  ]
+}

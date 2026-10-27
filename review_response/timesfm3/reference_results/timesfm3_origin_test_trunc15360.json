@@ -1,0 +1,527 @@
+{
+  "model": "google/timesfm-3.0-pytorch",
+  "revision": "43046b85ec22d584a13f8098c2ed39c889e129c2",
+  "parameter_count": 330710976,
+  "split": "origin_test",
+  "context_limit": 15360,
+  "covariates": "B,dBdt",
+  "target": "H",
+  "error": "per-sequence relative RMS over the forecast points, then averaged",
+  "device": "cuda",
+  "batch_size": 16,
+  "rows": [
+    {
+      "fraction": 0.1,
+      "n_scored": 1261,
+      "mean_rel_rms": 0.6546238745598276,
+      "median_rel_rms": 0.18714572436700264,
+      "p95_rel_rms": 2.723815782520355,
+      "per_length": [
+        {
+          "truncated_length": 2016,
+          "n": 294,
+          "context": 202,
+          "horizon": 1814,
+          "mean_rel_rms": 0.17009622013569858,
+          "seconds": 13.249409900046885
+        },
+        {
+          "truncated_length": 3216,
+          "n": 285,
+          "context": 322,
+          "horizon": 2894,
+          "mean_rel_rms": 0.1409965613520801,
+          "seconds": 19.94152670004405
+        },
+        {
+          "truncated_length": 5008,
+          "n": 291,
+          "context": 501,
+          "horizon": 4507,
+          "mean_rel_rms": 1.2727867841536629,
+          "seconds": 31.436980300117284
+        },
+        {
+          "truncated_length": 8015,
+          "n": 178,
+          "context": 802,
+          "horizon": 7213,
+          "mean_rel_rms": 0.6955540225295366,
+          "seconds": 31.89122619992122
+        },
+        {
+          "truncated_length": 12816,
+          "n": 133,
+          "context": 1282,
+          "horizon": 11534,
+          "mean_rel_rms": 0.9601485710822666,
+          "seconds": 37.98758239997551
+        },
+        {
+          "truncated_length": 15360,
+          "n": 80,
+          "context": 1536,
+          "horizon": 13824,
+          "mean_rel_rms": 1.417488337022371,
+          "seconds": 24.34247939987108
+        }
+      ]
+    },
+    {
+      "fraction": 0.2,
+      "n_scored": 1261,
+      "mean_rel_rms": 0.3744073838087596,
+      "median_rel_rms": 0.16335924140572447,
+      "p95_rel_rms": 1.5427078092787079,
+      "per_length": [
+        {
+          "truncated_length": 2016,
+          "n": 294,
+          "context": 403,
+          "horizon": 1613,
+          "mean_rel_rms": 0.0975660404972388,
+          "seconds": 11.43968140007928
+        },
+        {
+          "truncated_length": 3216,
+          "n": 285,
+          "context": 643,
+          "horizon": 2573,
+          "mean_rel_rms": 0.1334338828019667,
+          "seconds": 17.767616800032556
+        },
+        {
+          "truncated_length": 5008,
+          "n": 291,
+          "context": 1002,
+          "horizon": 4006,
+          "mean_rel_rms": 0.7171610753073256,
+          "seconds": 28.456154299899936
+        },
+        {
+          "truncated_length": 8015,
+          "n": 178,
+          "context": 1603,
+          "horizon": 6412,
+          "mean_rel_rms": 0.4931229152840323,
+          "seconds": 29.2209687998984
+        },
+        {
+          "truncated_length": 12816,
+          "n": 133,
+          "context": 2563,
+          "horizon": 10253,
+          "mean_rel_rms": 0.5419357902480876,
+          "seconds": 35.6164556001313
+        },
+        {
+          "truncated_length": 15360,
+          "n": 80,
+          "context": 3072,
+          "horizon": 12288,
+          "mean_rel_rms": 0.46084283175139973,
+          "seconds": 24.31783640012145
+        }
+      ]
+    },
+    {
+      "fraction": 0.3,
+      "n_scored": 1261,
+      "mean_rel_rms": 0.28388102965358447,
+      "median_rel_rms": 0.14904849883262353,
+      "p95_rel_rms": 1.0752756274676813,
+      "per_length": [
+        {
+          "truncated_length": 2016,
+          "n": 294,
+          "context": 605,
+          "horizon": 1411,
+          "mean_rel_rms": 0.09276225099107904,
+          "seconds": 11.40069520007819
+        },
+        {
+          "truncated_length": 3216,
+          "n": 285,
+          "context": 965,
+          "horizon": 2251,
+          "mean_rel_rms": 0.12903648354575775,
+          "seconds": 17.893297400092706
+        },
+        {
+          "truncated_length": 5008,
+          "n": 291,
+          "context": 1502,
+          "horizon": 3506,
+          "mean_rel_rms": 0.5249494084069585,
+          "seconds": 28.401050199987367
+        },
+        {
+          "truncated_length": 8015,
+          "n": 178,
+          "context": 2404,
+          "horizon": 5611,
+          "mean_rel_rms": 0.35246769897830765,
+          "seconds": 28.16599850007333
+        },
+        {
+          "truncated_length": 12816,
+          "n": 133,
+          "context": 3845,
+          "horizon": 8971,
+          "mean_rel_rms": 0.4168582696961614,
+          "seconds": 34.76353000011295
+        },
+        {
+          "truncated_length": 15360,
+          "n": 80,
+          "context": 4608,
+          "horizon": 10752,
+          "mean_rel_rms": 0.2873100082137331,
+          "seconds": 24.311324799899012
+        }
+      ]
+    },
+    {
+      "fraction": 0.4,
+      "n_scored": 1261,
+      "mean_rel_rms": 0.23573070926174175,
+      "median_rel_rms": 0.13721568611370186,
+      "p95_rel_rms": 0.8078645254478556,
+      "per_length": [
+        {
+          "truncated_length": 2016,
+          "n": 294,
+          "context": 806,
+          "horizon": 1210,
+          "mean_rel_rms": 0.09344076588711799,
+          "seconds": 11.26864519994706
+        },
+        {
+          "truncated_length": 3216,
+          "n": 285,
+          "context": 1286,
+          "horizon": 1930,
+          "mean_rel_rms": 0.13292228511538953,
+          "seconds": 17.725391699932516
+        },
+        {
+          "truncated_length": 5008,
+          "n": 291,
+          "context": 2003,
+          "horizon": 3005,
+          "mean_rel_rms": 0.40198949980297505,
+          "seconds": 28.45906799985096
+        },
+        {
+          "truncated_length": 8015,
+          "n": 178,
+          "context": 3206,
+          "horizon": 4809,
+          "mean_rel_rms": 0.293444323001497,
+          "seconds": 28.18091299990192
+        },
+        {
+          "truncated_length": 12816,
+          "n": 133,
+          "context": 5126,
+          "horizon": 7690,
+          "mean_rel_rms": 0.32034049642719165,
+          "seconds": 35.072530899895355
+        },
+        {
+          "truncated_length": 15360,
+          "n": 80,
+          "context": 6144,
+          "horizon": 9216,
+          "mean_rel_rms": 0.25105834985761166,
+          "seconds": 24.183643999975175
+        }
+      ]
+    },
+    {
+      "fraction": 0.5,
+      "n_scored": 1261,
+      "mean_rel_rms": 0.2238699885127608,
+      "median_rel_rms": 0.12586021731004193,
+      "p95_rel_rms": 0.7147948148833505,
+      "per_length": [
+        {
+          "truncated_length": 2016,
+          "n": 294,
+          "context": 1008,
+          "horizon": 1008,
+          "mean_rel_rms": 0.09472924414123642,
+          "seconds": 11.265481800073758
+        },
+        {
+          "truncated_length": 3216,
+          "n": 285,
+          "context": 1608,
+          "horizon": 1608,
+          "mean_rel_rms": 0.1258005390869613,
+          "seconds": 17.506741899996996
+        },
+        {
+          "truncated_length": 5008,
+          "n": 291,
+          "context": 2504,
+          "horizon": 2504,
+          "mean_rel_rms": 0.3446568021523986,
+          "seconds": 28.641866399906576
+        },
+        {
+          "truncated_length": 8015,
+          "n": 178,
+          "context": 4008,
+          "horizon": 4007,
+          "mean_rel_rms": 0.3038640317257871,
+          "seconds": 28.105544899823144
+        },
+        {
+          "truncated_length": 12816,
+          "n": 133,
+          "context": 6408,
+          "horizon": 6408,
+          "mean_rel_rms": 0.3526131705944293,
+          "seconds": 34.977328199893236
+        },
+        {
+          "truncated_length": 15360,
+          "n": 80,
+          "context": 7680,
+          "horizon": 7680,
+          "mean_rel_rms": 0.21645031668358355,
+          "seconds": 24.32274669990875
+        }
+      ]
+    },
+    {
+      "fraction": 0.6,
+      "n_scored": 1261,
+      "mean_rel_rms": 0.18684255814011194,
+      "median_rel_rms": 0.1119700075274475,
+      "p95_rel_rms": 0.5110270141980271,
+      "per_length": [
+        {
+          "truncated_length": 2016,
+          "n": 294,
+          "context": 1210,
+          "horizon": 806,
+          "mean_rel_rms": 0.08620144276149257,
+          "seconds": 11.463291599880904
+        },
+        {
+          "truncated_length": 3216,
+          "n": 285,
+          "context": 1930,
+          "horizon": 1286,
+          "mean_rel_rms": 0.11423239119497312,
+          "seconds": 17.894497799919918
+        },
+        {
+          "truncated_length": 5008,
+          "n": 291,
+          "context": 3005,
+          "horizon": 2003,
+          "mean_rel_rms": 0.26501115538075426,
+          "seconds": 28.48227100004442
+        },
+        {
+          "truncated_length": 8015,
+          "n": 178,
+          "context": 4809,
+          "horizon": 3206,
+          "mean_rel_rms": 0.27991533555871684,
+          "seconds": 28.055869800038636
+        },
+        {
+          "truncated_length": 12816,
+          "n": 133,
+          "context": 7690,
+          "horizon": 5126,
+          "mean_rel_rms": 0.2666952302430463,
+          "seconds": 35.07862180005759
+        },
+        {
+          "truncated_length": 15360,
+          "n": 80,
+          "context": 9216,
+          "horizon": 6144,
+          "mean_rel_rms": 0.19119210730823463,
+          "seconds": 24.324571599951014
+        }
+      ]
+    },
+    {
+      "fraction": 0.7,
+      "n_scored": 1261,
+      "mean_rel_rms": 0.14745420524225034,
+      "median_rel_rms": 0.09574714786793376,
+      "p95_rel_rms": 0.3454437506489045,
+      "per_length": [
+        {
+          "truncated_length": 2016,
+          "n": 294,
+          "context": 1411,
+          "horizon": 605,
+          "mean_rel_rms": 0.080519850419957,
+          "seconds": 11.36544100008905
+        },
+        {
+          "truncated_length": 3216,
+          "n": 285,
+          "context": 2251,
+          "horizon": 965,
+          "mean_rel_rms": 0.10174084725554164,
+          "seconds": 17.866743999999017
+        },
+        {
+          "truncated_length": 5008,
+          "n": 291,
+          "context": 3506,
+          "horizon": 1502,
+          "mean_rel_rms": 0.17169278937393934,
+          "seconds": 28.401124100200832
+        },
+        {
+          "truncated_length": 8015,
+          "n": 178,
+          "context": 5610,
+          "horizon": 2405,
+          "mean_rel_rms": 0.22613072229509273,
+          "seconds": 28.19869320001453
+        },
+        {
+          "truncated_length": 12816,
+          "n": 133,
+          "context": 8971,
+          "horizon": 3845,
+          "mean_rel_rms": 0.22052274369731073,
+          "seconds": 35.05061949999072
+        },
+        {
+          "truncated_length": 15360,
+          "n": 80,
+          "context": 10752,
+          "horizon": 4608,
+          "mean_rel_rms": 0.17159225163869724,
+          "seconds": 24.089143299963325
+        }
+      ]
+    },
+    {
+      "fraction": 0.8,
+      "n_scored": 1261,
+      "mean_rel_rms": 0.10993739290709426,
+      "median_rel_rms": 0.07934183849553433,
+      "p95_rel_rms": 0.24286398621337155,
+      "per_length": [
+        {
+          "truncated_length": 2016,
+          "n": 294,
+          "context": 1613,
+          "horizon": 403,
+          "mean_rel_rms": 0.06804003059104036,
+          "seconds": 11.401562700048089
+        },
+        {
+          "truncated_length": 3216,
+          "n": 285,
+          "context": 2573,
+          "horizon": 643,
+          "mean_rel_rms": 0.08460012537434969,
+          "seconds": 17.899269100045785
+        },
+        {
+          "truncated_length": 5008,
+          "n": 291,
+          "context": 4006,
+          "horizon": 1002,
+          "mean_rel_rms": 0.13594562259262327,
+          "seconds": 28.63281639991328
+        },
+        {
+          "truncated_length": 8015,
+          "n": 178,
+          "context": 6412,
+          "horizon": 1603,
+          "mean_rel_rms": 0.1444076857550188,
+          "seconds": 28.11649370007217
+        },
+        {
+          "truncated_length": 12816,
+          "n": 133,
+          "context": 10253,
+          "horizon": 2563,
+          "mean_rel_rms": 0.1307587384060936,
+          "seconds": 35.00962739996612
+        },
+        {
+          "truncated_length": 15360,
+          "n": 80,
+          "context": 12288,
+          "horizon": 3072,
+          "mean_rel_rms": 0.14825739104416463,
+          "seconds": 24.277311299927533
+        }
+      ]
+    },
+    {
+      "fraction": 0.9,
+      "n_scored": 1261,
+      "mean_rel_rms": 0.08081976480616841,
+      "median_rel_rms": 0.06459533946779746,
+      "p95_rel_rms": 0.1781515490835289,
+      "per_length": [
+        {
+          "truncated_length": 2016,
+          "n": 294,
+          "context": 1814,
+          "horizon": 202,
+          "mean_rel_rms": 0.06131014408883928,
+          "seconds": 11.312780200038105
+        },
+        {
+          "truncated_length": 3216,
+          "n": 285,
+          "context": 2894,
+          "horizon": 322,
+          "mean_rel_rms": 0.07006377551081447,
+          "seconds": 17.894488600082695
+        },
+        {
+          "truncated_length": 5008,
+          "n": 291,
+          "context": 4507,
+          "horizon": 501,
+          "mean_rel_rms": 0.07396479862942572,
+          "seconds": 28.373693600064144
+        },
+        {
+          "truncated_length": 8015,
+          "n": 178,
+          "context": 7214,
+          "horizon": 801,
+          "mean_rel_rms": 0.10395340434903001,
+          "seconds": 28.037307400023565
+        },
+        {
+          "truncated_length": 12816,
+          "n": 133,
+          "context": 11534,
+          "horizon": 1282,
+          "mean_rel_rms": 0.10752112638256009,
+          "seconds": 34.819855799898505
+        },
+        {
+          "truncated_length": 15360,
+          "n": 80,
+          "context": 13824,
+          "horizon": 1536,
+          "mean_rel_rms": 0.11990741067133462,
+          "seconds": 24.176383400103077
+        }
+      ]
+    }
+  ]
+}

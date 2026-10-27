@@ -1,0 +1,7 @@
+# TimesFM-3 environment for the review-response comparison only. Install on top
+# of the repository's requirements.txt (torch 2.10.0, numpy 2.3.3); these are
+# the versions the reported numbers were produced with, on Python 3.12.0.
+huggingface_hub==2.1.1
+safetensors==0.8.0
+# Official TimesFM source (Apache-2.0), package version 3.0.2, at the pinned commit.
+timesfm @ git+https://github.com/google-research/timesfm.git@e51928e27119cb17bebc005be2696b75e0a9e688
