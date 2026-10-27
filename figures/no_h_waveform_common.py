@@ -1,7 +1,9 @@
-"""Sequence loading and rollout helpers shared by the No-H waveform figure.
+"""Sequence loading and rollout helpers shared by the RateGRU-NF (No-H) waveform figure.
 
 Split out of the working error-accumulation script so that only the manuscript
-figure remains an entry point; the definitions below are unchanged.
+figure remains an entry point. ``evaluate_rows`` takes an optional
+``eval_warmup_steps`` so that a model rolled out without teacher forcing can be
+scored over the same steps as one that uses a warmup.
 """
 
 import json
@@ -70,7 +72,11 @@ def load_longest_origin_split(data_dir, split="test"):
     return selected, lengths[row_indices], deltas[row_indices], norm_stats, row_indices
 
 
-def evaluate_rows(model, batch_data, batch_lengths, batch_deltas, warmup_steps, device):
+def evaluate_rows(model, batch_data, batch_lengths, batch_deltas, warmup_steps, device, eval_warmup_steps=None):
+    """Roll out with ``warmup_steps`` of teacher forcing and score steps after
+    ``eval_warmup_steps`` (defaults to ``warmup_steps``)."""
+    if eval_warmup_steps is None:
+        eval_warmup_steps = warmup_steps
     input_seq = torch.from_numpy(batch_data[:, :, :-1]).float().to(device)
     h_gt = torch.from_numpy(batch_data[:, :, -1:]).float().to(device)
     dt = torch.from_numpy(batch_deltas).float().to(device).view(-1, 1)
@@ -87,7 +93,7 @@ def evaluate_rows(model, batch_data, batch_lengths, batch_deltas, warmup_steps, 
             lengths=lengths_tensor,
         )
         time_idx = torch.arange(batch_data.shape[1], device=device).unsqueeze(0)
-        eval_mask = target_mask & (time_idx > warmup_steps)
+        eval_mask = target_mask & (time_idx > eval_warmup_steps)
         _loss, row_err = sequence_relative_rms(pred, h_gt, eval_mask)
 
     return (

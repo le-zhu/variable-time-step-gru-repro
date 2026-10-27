@@ -30,17 +30,19 @@ PAPER_FIGURE_DIR = PAPER_DIR
 PAPER_PLOT_DATA_DIR = PAPER_DIR / "plot_data"
 OUTPUT_BASENAME = "no_h_initial_sync_comparison"
 CANDIDATE_COUNT = 8
-PAPER_CANDIDATE_RANKS = (1,)
+# The revised manuscript (Fig. 7) shows validation-set rank 6 (origin_val row 324).
+PAPER_CANDIDATE_RANKS = (6,)
 INITIAL_WINDOW = (1, 1000)
 LATER_WINDOW = (2500, 4500)
 PLOT_WINDOW = (0, 2000)
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Generate or replot the No-H initial-sync paper figure.")
+    parser = argparse.ArgumentParser(description="Generate or replot the RateGRU-NF (No-H) initial-sync paper figure (Fig. 7).")
     parser.add_argument("--plot-only-cache", type=Path, default=None, help="Replot from a saved NPZ cache without model inference.")
     parser.add_argument("--output-dir", type=Path, default=None, help="Output directory. Defaults to a timestamped directory under results/.")
-    parser.add_argument("--split", choices=("val", "test"), default="test", help="Original data split used for candidate selection.")
+    parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR, help="Processed N87 split (std_db_dt); defaults to data/N87_processed.")
+    parser.add_argument("--split", choices=("val", "test"), default="val", help="Original data split used for candidate selection; the manuscript uses val.")
     parser.add_argument("--candidate-count", type=int, default=CANDIDATE_COUNT, help="Number of candidate sequences to render.")
     parser.add_argument(
         "--skip-paper-copy",
@@ -143,9 +145,9 @@ def plot_initial_sync_comparison(
         {
             "ax": axes[1],
             "pred": no_h_pred_h,
-            "ylabel": "No-H\nH",
+            "ylabel": "RateGRU-NF\nH",
             "rms": no_h_row_rms,
-            "note": "No-H: no autoregressive H input",
+            "note": "RateGRU-NF: no autoregressive H input",
         },
     ]
 
@@ -266,7 +268,7 @@ def plot_candidates_overview(
         row_axes = axes[rank - 1]
         series = [
             ("RateGRU", main_pred_h[pos], float(main_row_rms[pos]), row_axes[0]),
-            ("No-H", no_h_pred_h[pos], float(no_h_row_rms[pos]), row_axes[1]),
+            ("RateGRU-NF", no_h_pred_h[pos], float(no_h_row_rms[pos]), row_axes[1]),
         ]
         for model_label, pred, rms, ax in series:
             ax.plot(x, true_h[pos, start:end], color="#1f77b4", linewidth=1.0, zorder=3)
@@ -279,7 +281,7 @@ def plot_candidates_overview(
         row_axes[0].set_ylabel(title, fontsize=7)
 
     axes[0, 0].set_title("RateGRU with H feedback", fontsize=9)
-    axes[0, 1].set_title("No-H variant", fontsize=9)
+    axes[0, 1].set_title("RateGRU-NF", fontsize=9)
     for ax in axes[-1]:
         ax.set_xlabel("Time step")
         ax.set_xlim(start, end)
@@ -337,7 +339,7 @@ def plot_paper_candidate_grid(
 
         panel_specs = [
             ("RateGRU", main_pred_h[pos], float(main_row_rms[pos]), axes[0, col]),
-            ("No-H", no_h_pred_h[pos], float(no_h_row_rms[pos]), axes[1, col]),
+            ("RateGRU-NF", no_h_pred_h[pos], float(no_h_row_rms[pos]), axes[1, col]),
         ]
         for model_label, pred, rms, ax in panel_specs:
             if ax is axes[0, col]:
@@ -395,7 +397,7 @@ def plot_paper_candidate_grid(
     fig.text(bottom_box.x0, 0.065, title, ha="left", va="center", fontsize=8)
     fig.text(0.023, 0.50, "H (A/m)", ha="center", va="center", rotation=90, fontsize=8)
     fig.text(model_label_x, (top_box.y0 + top_box.y1) / 2, "RateGRU", ha="center", va="center", rotation=90, fontsize=8)
-    fig.text(model_label_x, (bottom_box.y0 + bottom_box.y1) / 2, "No-H", ha="center", va="center", rotation=90, fontsize=8)
+    fig.text(model_label_x, (bottom_box.y0 + bottom_box.y1) / 2, "RateGRU-NF", ha="center", va="center", rotation=90, fontsize=8)
     for suffix in ("png", "pdf", "svg"):
         fig.savefig(output_dir / f"{output_basename}.{suffix}", transparent=True, bbox_inches="tight", pad_inches=0.0)
     plt.close(fig)
@@ -431,6 +433,7 @@ def save_paper_plot_cache(
             "stem": OUTPUT_BASENAME,
             "top_candidates": cached_candidates,
             "main_warmup_steps": int(main_warmup_steps),
+            "no_h_row_rms_policy": "first main_warmup_steps excluded from the error, matching the paper protocol",
             "paper_candidate_ranks": list(PAPER_CANDIDATE_RANKS),
         },
     )
@@ -447,6 +450,7 @@ def replot_paper_from_cache(cache_path: Path, output_dir: Path, copy_to_paper: b
         arrays["main_row_rms"],
         arrays["no_h_row_rms"],
         int(metadata["main_warmup_steps"]),
+        selected_ranks=tuple(metadata.get("paper_candidate_ranks", PAPER_CANDIDATE_RANKS)),
     )
     if copy_to_paper:
         PAPER_FIGURE_DIR.mkdir(parents=True, exist_ok=True)
@@ -480,16 +484,20 @@ def main():
         )
         return
 
-    if args.candidate_count < 1:
-        raise ValueError("--candidate-count must be at least 1.")
+    if args.candidate_count < max(PAPER_CANDIDATE_RANKS):
+        raise ValueError(f"--candidate-count must be at least {max(PAPER_CANDIDATE_RANKS)} (the paper candidate rank).")
 
     device = resolve_device()
     no_h_model, no_h_config, no_h_model_path = load_model(DEFAULT_RUN_DIR, device)
     main_model, main_config, main_model_path = load_model(DEFAULT_H_FEEDBACK_RUN_DIR, device)
-    data, lengths, deltas, norm_stats, row_indices = load_longest_origin_split(DEFAULT_DATA_DIR, split=args.split)
+    data, lengths, deltas, norm_stats, row_indices = load_longest_origin_split(args.data_dir, split=args.split)
 
-    no_h_row_rms, no_h_pred_norm, true_norm = evaluate_rows(no_h_model, data, lengths, deltas, 0, device)
     main_warmup_steps = int(main_config["train"]["eval_warmup_len"])
+    # RateGRU-NF has no H feedback, so it is rolled out without teacher forcing
+    # but scored over the same post-warmup steps as RateGRU.
+    no_h_row_rms, no_h_pred_norm, true_norm = evaluate_rows(
+        no_h_model, data, lengths, deltas, 0, device, eval_warmup_steps=main_warmup_steps
+    )
     main_row_rms, main_pred_norm, _ = evaluate_rows(main_model, data, lengths, deltas, main_warmup_steps, device)
 
     std_h = float(norm_stats["std_h"])
@@ -630,7 +638,7 @@ def main():
         "no_h_model_path": str(no_h_model_path),
         "main_run_dir": str(DEFAULT_H_FEEDBACK_RUN_DIR),
         "main_model_path": str(main_model_path),
-        "data_dir": str(DEFAULT_DATA_DIR),
+        "data_dir": str(args.data_dir),
         "split": args.split,
         "device": str(device),
         "longest_group_size": int(len(row_indices)),
@@ -647,6 +655,7 @@ def main():
         "plot_window": list(PLOT_WINDOW),
         "main_warmup_steps": int(main_warmup_steps),
         "no_h_warmup_steps": 0,
+        "no_h_eval_warmup_steps": int(main_warmup_steps),
         "main_selected_row_relative_rms": float(main_row_rms[pos]),
         "no_h_selected_row_relative_rms": float(no_h_row_rms[pos]),
         "selected_candidate": candidate,

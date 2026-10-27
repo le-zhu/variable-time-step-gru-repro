@@ -66,12 +66,42 @@ MODEL_SPECS = {
         "data_dir": DEFAULT_DATA_DIR,
         "ymax": 50.0,
     },
+    # DtInputGRU enters only the revised low-frequency downsampling figure, so
+    # only those cases are evaluated for it.
+    "dtinputgru": {
+        "title": "DtInputGRU on N87 frequency-group diagnostics",
+        "paper_stem": "dtinputgru_longest_sampling_interval_error",
+        "run_dir": ROOT / "checkpoints" / "n87_paper_models" / "dtinputgru",
+        "data_dir": DEFAULT_DATA_DIR,
+        "ymax": 50.0,
+        "low2_downsampling_only": True,
+    },
 }
 
 MODEL_TITLES = {
     "dtscaledgru": "DtScaledGRU",
     "rategru": "RateGRU",
+    "dtinputgru": "DtInputGRU",
 }
+PAPER_MODEL_LABELS = {
+    "SoftplusRateExpCapGRU": "RateGRU",
+    "DtInputFixedGRU": "DtInputGRU",
+}
+DEFAULT_MODELS = ["dtscaledgru", "rategru", "dtinputgru"]
+# Panels of the upsampling overview; DtInputGRU is not evaluated for it.
+UPSAMPLING_OVERVIEW_MODELS = ["dtscaledgru", "rategru"]
+LOW2_STEM = "n87_sampling_downsampling_low2_with_dtinput"
+LOW2_SIZE_KEY = "n87_sampling_downsampling_low2"
+LOW2_YMAX = 40.0
+# Factors drawn in the manuscript figure; every evaluated factor stays in the CSV.
+LOW2_PLOT_FACTORS = [1, 2, 4, 8, 14, 16, 18, 22, 28, 32]
+# Draw order and legend order of the revised figure.
+LOW2_MODEL_ORDER = ["dtscaledgru", "rategru", "dtinputgru"]
+LOW2_LEGEND_ORDER = ["dtscaledgru", "dtinputgru", "rategru"]
+
+
+def paper_model_label(model_key: str) -> str:
+    return PAPER_MODEL_LABELS.get(str(model_key), str(model_key))
 
 
 def combined_figure_size(models: list[str]) -> tuple[float, float]:
@@ -114,10 +144,25 @@ DOWNSAMPLE_FACTORS = DOWNSAMPLE_PLOT_FACTORS
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Evaluate the frequency-group sampling diagnostics and draw n87_sampling_downsampling_low2."
+        description=(
+            "Evaluate the frequency-group sampling diagnostics and draw "
+            "n87_sampling_downsampling_low2_with_dtinput (DtScaledGRU, RateGRU, DtInputGRU)."
+        )
     )
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
-    parser.add_argument("--models", nargs="+", default=["dtscaledgru", "rategru"], choices=sorted(MODEL_SPECS))
+    parser.add_argument("--models", nargs="+", default=DEFAULT_MODELS, choices=sorted(MODEL_SPECS))
+    parser.add_argument(
+        "--data-dir",
+        type=Path,
+        default=None,
+        help="Processed N87 split (std_db_dt) shared by all models; defaults to data/N87_processed.",
+    )
+    parser.add_argument(
+        "--low2-only",
+        action="store_true",
+        help="Evaluate only the 80/50 kHz downsampling cases that the manuscript figure draws.",
+    )
+    parser.add_argument("--low2-plot-factors", type=int, nargs="+", default=LOW2_PLOT_FACTORS)
     parser.add_argument("--device", default="auto")
     parser.add_argument("--torch-threads", type=int, default=None)
     parser.add_argument("--high-upsample-factors", type=int, nargs="+", default=HIGH_UPSAMPLE_FACTORS)
@@ -128,6 +173,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dtscaledgru-data-dir", type=Path, default=None)
     parser.add_argument("--rategru-run-dir", type=Path, default=None)
     parser.add_argument("--rategru-data-dir", type=Path, default=None)
+    parser.add_argument("--dtinputgru-run-dir", type=Path, default=None)
+    parser.add_argument("--dtinputgru-data-dir", type=Path, default=None)
     parser.add_argument("--no-low-upsampling", action="store_true")
     parser.add_argument("--plot-only", action="store_true")
     parser.add_argument("--copy-to-paper", action="store_true")
@@ -155,6 +202,8 @@ def model_source_paths(model_name: str, args: argparse.Namespace) -> tuple[dict[
     data_dir = Path(str(spec["data_dir"]))
     override_run = getattr(args, f"{model_name}_run_dir", None)
     override_data = getattr(args, f"{model_name}_data_dir", None)
+    if override_data is None:
+        override_data = getattr(args, "data_dir", None)
     if override_run is not None:
         run_dir = resolve(override_run)
     if override_data is not None:
@@ -343,11 +392,7 @@ def write_case_metadata(
     metadata_path = output_dir / f"metadata_{model_name}_{int(selected_length)}_{sampling}.json"
     payload = {
         "model": model_name,
-        "model_label": (
-            "RateGRU"
-            if run_config["model_key"] == "SoftplusRateExpCapGRU"
-            else str(run_config["model_key"])
-        ),
+        "model_label": paper_model_label(run_config["model_key"]),
         "run_dir": str(run_dir.resolve()),
         "model_path": str(model_path.resolve()),
         "data_dir": str(data_dir.resolve()),
@@ -591,25 +636,29 @@ def save_low2_downsampling_overlay(
     *,
     plot_downsample_factors: set[int],
 ) -> None:
+    """Draw the revised Fig. 8: 80/50 kHz downsampling for all three models.
+
+    Values above the y-limit are kept and clipped by the axis, so a curve that
+    leaves the plot still shows where it crosses the upper edge.
+    """
     model_colors = {
         ("dtscaledgru", 80.0): "#2ca02c",
         ("dtscaledgru", 50.0): "#d62728",
         ("rategru", 80.0): "#1f77b4",
         ("rategru", 50.0): "#FFD400",
+        ("dtinputgru", 80.0): "#9467bd",
+        ("dtinputgru", 50.0): "#ff7f0e",
     }
-    model_markers = {"dtscaledgru": "s", "rategru": "o"}
-    model_names = {
-        "dtscaledgru": "DtScaledGRU",
-        "rategru": "RateGRU",
-        }
+    model_markers = {"dtscaledgru": "s", "rategru": "o", "dtinputgru": "^"}
+    model_zorder = {"dtscaledgru": 0.0, "rategru": 0.2, "dtinputgru": 0.4}
     downsample_ticks = [item for item in LOG_TICKS if 1.0 <= item[0] <= 36.0]
-    stem = "n87_sampling_downsampling_low2"
+    stem = LOW2_SIZE_KEY
     with plt.rc_context(paper_matplotlib_rc(font_size=8)):
         fig, ax = plt.subplots(figsize=low2_downsampling_figure_size(), dpi=180)
         style_sampling_axis(
             ax,
             title="N87 low-frequency downsampling diagnostics",
-            ymax=70.0,
+            ymax=LOW2_YMAX,
             ytick_step=10,
             xlim=(0.9, 36.0),
             xticks=downsample_ticks,
@@ -618,7 +667,10 @@ def save_low2_downsampling_overlay(
             stem=stem,
             show_unit_line=False,
         )
-        for model_name in models:
+        handles_by_key = {}
+        draw_models = [name for name in LOW2_MODEL_ORDER if name in models]
+        draw_models += [name for name in models if name not in draw_models]
+        for model_name in draw_models:
             for length in [20016, 32016]:
                 freq = frequency_khz(length)
                 group_rows = sorted(
@@ -633,39 +685,43 @@ def save_low2_downsampling_overlay(
                 )
                 if not group_rows:
                     continue
-                color = model_colors[(model_name, freq)]
-                ax.plot(
+                (line,) = ax.plot(
                     [float(row["x_value"]) for row in group_rows],
-                    [
-                        float(row["mean_err"]) * 100.0
-                        if float(row["mean_err"]) * 100.0 <= 70.0
-                        else float("nan")
-                        for row in group_rows
-                    ],
+                    [float(row["mean_err"]) * 100.0 for row in group_rows],
                     marker=model_markers.get(model_name, "o"),
                     linewidth=line_width(stem, 1.05),
                     markersize=marker_size(stem, 2.2),
                     linestyle="-",
-                    color=color,
-                    label=f"{model_names.get(model_name, model_name)} {frequency_label(length)}",
-                    zorder=2.0
-                    + (0.2 if model_name == "rategru" else 0.0)
-                    + (0.1 if length == 32016 else 0.0),
+                    color=model_colors.get((model_name, freq)),
+                    label=f"{MODEL_TITLES.get(model_name, model_name)} {frequency_label(length)}",
+                    zorder=2.0 + model_zorder.get(model_name, 0.0) + (0.1 if length == 32016 else 0.0),
                 )
+                handles_by_key[(model_name, length)] = line
+        legend_models = [name for name in LOW2_LEGEND_ORDER if name in draw_models]
+        legend_models += [name for name in draw_models if name not in legend_models]
+        legend_handles = [
+            handles_by_key[(name, length)]
+            for name in legend_models
+            for length in [20016, 32016]
+            if (name, length) in handles_by_key
+        ]
         ax.legend(
+            legend_handles,
+            [handle.get_label() for handle in legend_handles],
             frameon=False,
-            fontsize=8.0,
+            fontsize=7.2,
             ncol=1,
             loc="upper left",
-            handlelength=0.75,
-            handletextpad=0.25,
-            labelspacing=0.12,
+            handlelength=0.7,
+            handletextpad=0.22,
+            labelspacing=0.1,
+            columnspacing=0.6,
             borderpad=0.0,
-            borderaxespad=0.15,
+            borderaxespad=0.12,
         )
         fig.tight_layout(pad=0.18)
         for suffix in ("png", "pdf", "svg"):
-            out_path = output_dir / f"n87_sampling_downsampling_low2.{suffix}"
+            out_path = output_dir / f"{LOW2_STEM}.{suffix}"
             fig.savefig(out_path)
             if copy_to_paper and suffix == "pdf":
                 PAPER_FIGURE_DIR.mkdir(parents=True, exist_ok=True)
@@ -680,29 +736,35 @@ def save_plots(
     copy_to_paper: bool,
     *,
     plot_downsample_factors: set[int],
+    low2_plot_factors: set[int],
 ) -> None:
     upsample_ticks = [item for item in LOG_TICKS if 1.0 / 36.0 <= item[0] <= 10.0]
     downsample_ticks = [item for item in LOG_TICKS if 1.0 <= item[0] <= 36.0]
     all_lengths = sorted({int(row["selected_length"]) for row in rows}, key=frequency_khz)
-    save_combined_figure(
-        output_dir,
-        rows,
-        models,
-        copy_to_paper,
-        stem="n87_sampling_upsampling_overview",
-        row_filter=lambda row: is_upsampling_train_range_row(row, plot_downsample_factors),
-        ymax=20.0,
-        ytick_step=5,
-        xlim=(1.0 / 36.0, 10.0),
-        xticks=upsample_ticks,
-        lengths=all_lengths,
-    )
+    # The upsampling overview is a working figure that the revised manuscript
+    # does not show; draw it only for models that have upsampling rows.
+    upsampled_models = {str(row["model"]) for row in rows if str(row["sampling"]) == "upsample"}
+    overview_models = [name for name in models if name in UPSAMPLING_OVERVIEW_MODELS and name in upsampled_models]
+    if overview_models:
+        save_combined_figure(
+            output_dir,
+            rows,
+            overview_models,
+            False,
+            stem="n87_sampling_upsampling_overview",
+            row_filter=lambda row: is_upsampling_train_range_row(row, plot_downsample_factors),
+            ymax=20.0,
+            ytick_step=5,
+            xlim=(1.0 / 36.0, 10.0),
+            xticks=upsample_ticks,
+            lengths=all_lengths,
+        )
     save_low2_downsampling_overlay(
         output_dir,
         rows,
         models,
         copy_to_paper,
-        plot_downsample_factors=plot_downsample_factors,
+        plot_downsample_factors=low2_plot_factors,
     )
 
 
@@ -740,24 +802,23 @@ def main() -> None:
             high_lengths, low_lengths = select_lengths(lengths)
             unique_lengths = sorted(int(value) for value in np.unique(lengths))
             base_warmup = int(run_config["train"]["eval_warmup_len"])
-            if run_config["model_key"] == "SoftplusRateExpCapGRU":
-                model_label = "RateGRU"
-            else:
-                model_label = str(run_config["model_key"])
+            model_label = paper_model_label(run_config["model_key"])
+            low2_only = bool(args.low2_only or MODEL_SPECS[model_name].get("low2_downsampling_only", False))
 
             cases: list[tuple[int, str, int]] = []
-            for length in high_lengths:
-                cases.extend((length, "upsample", int(factor)) for factor in sorted(dict.fromkeys(args.high_upsample_factors)))
-            if not args.no_low_upsampling:
-                for length in low_lengths:
-                    cases.extend((length, "upsample", int(factor)) for factor in sorted(dict.fromkeys(args.low_upsample_factors)))
             downsample_factors = sorted(dict.fromkeys(int(factor) for factor in args.downsample_factors))
-            for length in unique_lengths:
-                train_factor = TRAIN_DOWNSAMPLE_FACTOR_BY_LENGTH.get(int(length), 1)
-                cases.extend(
-                    (length, "downsample", int(factor))
-                    for factor in configured_downsample_factors(train_factor, downsample_factors)
-                )
+            if not low2_only:
+                for length in high_lengths:
+                    cases.extend((length, "upsample", int(factor)) for factor in sorted(dict.fromkeys(args.high_upsample_factors)))
+                if not args.no_low_upsampling:
+                    for length in low_lengths:
+                        cases.extend((length, "upsample", int(factor)) for factor in sorted(dict.fromkeys(args.low_upsample_factors)))
+                for length in unique_lengths:
+                    train_factor = TRAIN_DOWNSAMPLE_FACTOR_BY_LENGTH.get(int(length), 1)
+                    cases.extend(
+                        (length, "downsample", int(factor))
+                        for factor in configured_downsample_factors(train_factor, downsample_factors)
+                    )
             for length in sorted(unique_lengths[-2:]):
                 cases.extend((length, "downsample", int(factor)) for factor in downsample_factors)
             cases = sorted(set(cases), key=lambda item: (item[0], item[1], item[2]))
@@ -820,6 +881,7 @@ def main() -> None:
         case_metadata_paths = []
 
     plot_downsample_factors = {int(factor) for factor in args.plot_downsample_factors}
+    low2_plot_factors = {int(factor) for factor in args.low2_plot_factors}
     rows = sorted(rows, key=row_sort_key)
     write_summary(summary_path, rows)
     save_plots(
@@ -828,6 +890,7 @@ def main() -> None:
         args.models,
         args.copy_to_paper,
         plot_downsample_factors=plot_downsample_factors,
+        low2_plot_factors=low2_plot_factors,
     )
     metadata = {
         "output_dir": str(output_dir.resolve()),
@@ -838,7 +901,13 @@ def main() -> None:
         "frequency_policy": "MagNetX nominal frequency labels are used when the sequence length is known; otherwise the fallback is 100 * 16 MHz / sequence_length / 1000.",
         "magnetx_nominal_frequency_khz": MAGNETX_NOMINAL_FREQUENCY_KHZ,
         "upsampling_figure_policy": "all available upsampling points plus each length group's training-time downsampling factor; y-axis capped at 20%",
-        "downsampling_figure_policy": "two lowest nominal-frequency groups only, original sampling to 32x downsampling; y-axis capped at 70%",
+        "downsampling_figure": f"{LOW2_STEM}.pdf",
+        "downsampling_figure_policy": (
+            "two lowest nominal-frequency groups only, original sampling to 32x downsampling; "
+            f"y-axis limited to {LOW2_YMAX:g}% (higher values are clipped by the axis)"
+        ),
+        "low2_plot_factors": sorted(low2_plot_factors),
+        "low2_only": bool(args.low2_only),
         "train_downsample_factor_by_length": TRAIN_DOWNSAMPLE_FACTOR_BY_LENGTH,
         "high_upsample_factors": sorted(dict.fromkeys(int(factor) for factor in args.high_upsample_factors)),
         "low_upsample_factors": [] if args.no_low_upsampling else sorted(dict.fromkeys(int(factor) for factor in args.low_upsample_factors)),

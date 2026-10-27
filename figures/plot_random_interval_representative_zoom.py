@@ -33,7 +33,7 @@ DEFAULT_OUTPUT_DIR = ROOT / "results" / "n87_random_interval_zoom"
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Draw a Figure-10-style representative random-interval waveform."
+        description="Draw the representative random-interval waveform (Fig. 11 of the revised manuscript)."
     )
     parser.add_argument("--run-dir", type=Path, default=DEFAULT_RUN_DIR)
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
@@ -51,6 +51,11 @@ def parse_args():
         type=int,
         default=None,
         help="If set, search all selected rows for a window of this width whose local error is closest to the seed mean error.",
+    )
+    parser.add_argument(
+        "--meanlike-row",
+        action="store_true",
+        help="With --auto-window-span, first pick the row whose error is closest to the seed mean, then search windows only in that row.",
     )
     parser.add_argument("--window-stride", type=int, default=25)
     parser.add_argument("--min-window-points", type=int, default=50)
@@ -259,11 +264,11 @@ def draw_representative_plot(
 
     ax_h.text(
         0.5,
-        0.02,
+        0.96,
         f"row err = {100.0 * row_err:.2f}%",
         transform=ax_h.transAxes,
         ha="center",
-        va="bottom",
+        va="top",
         fontsize=8,
     )
     ax_h.set_xlabel("")
@@ -430,12 +435,16 @@ def main():
 
     selected_window = None
     if args.auto_window_span is not None:
+        search_positions = list(range(len(selected_rows)))
+        if args.meanlike_row:
+            finite = [p for p in search_positions if np.isfinite(row_err[p])]
+            search_positions = [min(finite, key=lambda p: abs(float(row_err[p]) - seed_mean_err))]
         selected_window = choose_representative_window(
-            pred_norm=pred_norm,
-            h_true_norm=h_true_norm,
-            original_indices=original_indices,
-            batch_lengths=batch_lengths,
-            selected_rows=selected_rows,
+            pred_norm=pred_norm[search_positions],
+            h_true_norm=h_true_norm[search_positions],
+            original_indices=original_indices[search_positions],
+            batch_lengths=batch_lengths[search_positions],
+            selected_rows=[selected_rows[p] for p in search_positions],
             target_error=seed_mean_err,
             span=int(args.auto_window_span),
             stride=int(args.window_stride),
@@ -480,7 +489,7 @@ def main():
         b_t=b_t,
         std_h=std_h,
         std_b=std_b,
-        row_err=window_err,
+        row_err=representative_err,
         seed=args.seed,
         row_idx=args.row_idx,
         max_step=args.max_step,
@@ -501,7 +510,7 @@ def main():
             b_t=b_t,
             std_h=std_h,
             std_b=std_b,
-            row_err=window_err,
+            row_err=representative_err,
             seed=args.seed,
             row_idx=args.row_idx,
             max_step=args.max_step,
