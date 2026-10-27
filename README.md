@@ -14,29 +14,41 @@ The paper-to-code model names are:
 | Paper name | Code key |
 | --- | --- |
 | FixedGRU | `StandardGRU` |
+| DtInputGRU | `DtInputFixedGRU` |
 | DtScaledGRU | `DtScaledGRU` |
 | RateGRU | `SoftplusRateExpCapGRU` |
-| Hidden32 | `SoftplusRateExpCapGRUHidden32` |
-| No-H | `SoftplusRateExpCapGRUNoH` |
+| RateGRU-Orig | `SoftplusRateExpCapGRU`, trained on the original grid |
+| RateGRU-32 | `SoftplusRateExpCapGRUHidden32` |
+| RateGRU-NF | `SoftplusRateExpCapGRUNoH` |
 | HardCutRateGRU | `SoftplusRateHardcutGRU` |
 | GlobalExpRateGRU | `SoftplusRateGlobalExpGRU` |
 
 Every model row of every results table in the manuscript has released weights.
 DtScaledGRU and RateGRU appear twice, once per time-step normalization scheme,
 so the checkpoint folders carry a `_max_step` suffix for the Max-step variant.
+RateGRU-32 and RateGRU-NF were called Hidden32 and No-H before the revision;
+their folders keep the old names.
+
+Version 1.1.0 follows the first revision of the manuscript: it adds the two
+models of the revised comparison, DtInputGRU and RateGRU-Orig, the scripts for
+the revised tables and figures, and `review_response/`, the code for results
+reported only in the response to the reviewers.
 
 ## Current contents
 
 - Core model definitions, preprocessing, training, rollout, and evaluation
 - The checked single-run configurations for every released paper model
-- Eleven N87 checkpoints: the five of the controlled comparison and structural
-  ablation, and the six remaining rows of the normalization/limiter ablation
+- Thirteen N87 checkpoints: the seven of the controlled comparison and
+  structural ablation, and the six remaining rows of the normalization/limiter
+  ablation
 - Ten material-specific RateGRU checkpoints, each with its `run_config.json`
 - Checkpoint checksums and strict loading tests
 - Sanitized training logs for the paper-reported hyperparameter searches
 - Scripts for every reported metric: held-out and resampled sequence error,
   core-loss error, and the sampling-interval experiments
 - Generators for all thirteen manuscript figures
+- `review_response/`: the analyses reported only in the response to the
+  reviewers, including a zero-shot comparison with TimesFM-3
 
 ## Layout
 
@@ -47,6 +59,7 @@ checkpoints/          released weights, run configurations, and checksums
 scripts/              command entry points: train, verify, evaluate
 figures/              manuscript figure generators and their shared style
 sweep_logs/           sanitized per-run training logs of the two paper searches
+review_response/      analyses reported only in the response to the reviewers
 tests/                loading, configuration, and archive-consistency checks
 data/                 format description only; no data ships here
 ```
@@ -102,7 +115,7 @@ python scripts/run_paper_experiment.py `
   --input-dir C:\path\to\raw\N87
 ```
 
-Use `python scripts/run_paper_experiment.py --help` to list all eleven N87 and
+Use `python scripts/run_paper_experiment.py --help` to list all thirteen N87 and
 ten material-specific experiment identifiers. Outputs are written below `runs/`.
 
 The entry point fixes the sequence split seed, preprocessing mode, three-stage
@@ -122,7 +135,7 @@ python -m pytest -q
 The paper sweep evidence is indexed by `sweep_logs/manifest.csv`. It is split
 into `controlled_n87/`, the common-protocol search behind the model comparison,
 and `ten_materials/`, the wider per-material search, because the manuscript
-states a different scan rule for each. Together they hold 228 per-run training
+states a different scan rule for each. Together they hold 239 per-run training
 logs and sanitized configurations; no server controller output or machine path
 is included. `sweep_logs/COVERAGE.md` maps both folders onto the search rules
 stated in the manuscript.
@@ -153,9 +166,10 @@ released N87 checkpoints and a processed N87 split, which the commands below
 expect at `data/N87_processed`.
 
 ```powershell
-# Nonuniform grids, four seeds
-python -m scripts.evaluate_n87_longest_random_interval `
-  --max-step 10 --seeds 42 43 44 45 --output-dir results\n87_random_interval
+# Nonuniform grids (Table V): every resampled frequency group, random steps
+# up to the group's training factor, four seeds, original-grid comparison
+python -m scripts.evaluate_random_interval_groups --checkpoint n87:rategru `
+  --processed-data-dir data\N87_processed
 
 # Downsampling of the longest sequences
 python -m scripts.evaluate_n87_longest_downsample `
@@ -165,7 +179,8 @@ python -m scripts.evaluate_n87_longest_downsample `
 python -m scripts.evaluate_n87_frequency_groups
 ```
 
-The first two finish in minutes. The third sweeps every frequency group under
+The first two finish in minutes; `figures/README.md` gives the commands for
+the revised Fig. 8 (DtInputGRU added) and Fig. 11. The third sweeps every frequency group under
 both up- and downsampling for two models and took about an hour on one GPU.
 
 ## Figures
@@ -191,7 +206,10 @@ figure. All output goes to `figures/output/`, which is not tracked.
 ## License
 
 MIT, in `LICENSE`. It covers everything released here: the code, the released
-checkpoints, and the archived training logs.
+checkpoints, and the archived training logs. Third-party software used by
+`review_response/timesfm3/` is not included: the TimesFM source code is
+Apache-2.0, and the TimesFM-3 weights, which that folder downloads, are under
+the TimesFM Non-Commercial License.
 
 ## Contact
 
