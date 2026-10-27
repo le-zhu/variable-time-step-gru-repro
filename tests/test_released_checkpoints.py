@@ -17,7 +17,7 @@ class ReleasedCheckpointTests(unittest.TestCase):
         checkpoint_root = REPOSITORY_ROOT / "checkpoints"
         manifest = json.loads((checkpoint_root / "manifest.json").read_text(encoding="utf-8"))
         entries = manifest["n87_paper_models"] + manifest["ten_material_rategru"]
-        self.assertEqual(len(entries), 21)
+        self.assertEqual(len(entries), 23)
 
         for entry in entries:
             with self.subTest(path=entry["path"]):
@@ -67,11 +67,13 @@ class ReleasedCheckpointTests(unittest.TestCase):
         manifest = json.loads(
             (REPOSITORY_ROOT / "checkpoints" / "manifest.json").read_text(encoding="utf-8")
         )
-        # The five main-comparison models are also tested on the held-out set;
+        # The seven main-comparison models are also tested on the held-out set;
         # the joint-ablation rows are reported on the validation set only.
         tested = {"n87_paper_models/fixedgru/model.pth",
+                  "n87_paper_models/dtinputgru/model.pth",
                   "n87_paper_models/dtscaledgru/model.pth",
                   "n87_paper_models/rategru/model.pth",
+                  "n87_paper_models/rategru_orig/model.pth",
                   "n87_paper_models/hidden32/model.pth",
                   "n87_paper_models/no_h/model.pth"}
         for entry in manifest["n87_paper_models"]:
@@ -81,9 +83,10 @@ class ReleasedCheckpointTests(unittest.TestCase):
                     continue
                 self.assertTrue({"test_mean", "test_p95", "resampled_heldout_mean",
                                  "resampled_heldout_p95"} <= set(entry))
-                # The manuscript prints N/A for FixedGRU: its resampled length
-                # cap equals the raw length, so resampling is a no-op there.
-                expected_null = entry["paper_name"] == "FixedGRU"
+                # The manuscript prints N/A for FixedGRU and RateGRU-Orig: both
+                # are trained on the original grid, whose length cap equals the
+                # raw length, so resampling is a no-op there.
+                expected_null = entry["paper_name"] in {"FixedGRU", "RateGRU-Orig"}
                 self.assertEqual(entry["resampled_heldout_mean"] is None, expected_null)
 
     def test_every_released_checkpoint_has_its_own_evaluation_key(self):

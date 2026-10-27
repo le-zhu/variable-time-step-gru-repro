@@ -50,9 +50,31 @@ N87_EXPERIMENTS = {
         "lr_3": 0.006,
         "grad_clip_value": 20.0,
     },
+    # Added in the revision: dt as a fifth gate input on the resampled grid, and
+    # RateGRU trained on the original grid only (no resampling, as FixedGRU).
+    "n87_dtinputgru": {
+        "material": "N87",
+        "paper_name": "DtInputGRU",
+        "model_key": "DtInputFixedGRU",
+        "dt_norm_mode": "std_db_dt",
+        "max_len": 4000,
+        "lr_12": 0.001,
+        "lr_3": 0.008,
+        "grad_clip_value": 20.0,
+    },
+    "n87_rategru_orig": {
+        "material": "N87",
+        "paper_name": "RateGRU-Orig",
+        "model_key": "SoftplusRateExpCapGRU",
+        "dt_norm_mode": "std_db_dt",
+        "max_len": 40000,
+        "lr_12": 0.001,
+        "lr_3": 0.004,
+        "grad_clip_value": 20.0,
+    },
     "n87_hidden32": {
         "material": "N87",
-        "paper_name": "Hidden32",
+        "paper_name": "RateGRU-32",
         "model_key": "SoftplusRateExpCapGRUHidden32",
         "dt_norm_mode": "std_db_dt",
         "max_len": 4000,
@@ -62,7 +84,7 @@ N87_EXPERIMENTS = {
     },
     "n87_no_h": {
         "material": "N87",
-        "paper_name": "No-H",
+        "paper_name": "RateGRU-NF",
         "model_key": "SoftplusRateExpCapGRUNoH",
         "dt_norm_mode": "std_db_dt",
         "max_len": 4000,

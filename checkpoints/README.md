@@ -3,7 +3,7 @@
 This directory contains only the model weights used by the paper. The files are
 PyTorch `state_dict` objects and do not contain optimizer state or training data.
 
-- `n87_paper_models/`: the eleven N87 models. Five are the controlled
+- `n87_paper_models/`: the thirteen N87 models. Seven are the controlled
   comparison and the structural ablation; the other six complete the joint
   ablation of time-step normalization and limiting functions, whose folders
   carry a `_max_step` or `_rms_slope` suffix because that table reports both

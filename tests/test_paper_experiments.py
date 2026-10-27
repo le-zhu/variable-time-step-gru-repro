@@ -11,7 +11,7 @@ from scripts.run_paper_experiment import make_settings
 
 class PaperExperimentTests(unittest.TestCase):
     def test_every_selected_configuration_builds(self):
-        self.assertEqual(len(PAPER_EXPERIMENTS), 21)
+        self.assertEqual(len(PAPER_EXPERIMENTS), 23)
         with tempfile.TemporaryDirectory() as temp_dir:
             input_dir = Path(temp_dir)
             for experiment_id, spec in PAPER_EXPERIMENTS.items():

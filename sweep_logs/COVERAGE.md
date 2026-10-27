@@ -14,7 +14,7 @@ manifest.csv      one row per run in either folder
 N87's RateGRU RMS-slope runs at `lr12 = 0.001` are part of both searches, so
 they appear in both folders, in the same way the N87 RateGRU checkpoint is
 released under both checkpoint collections. Those five runs are the only
-duplication in the archive; `manifest.csv` lists 228 rows for 223 distinct runs.
+duplication in the archive; `manifest.csv` lists 239 rows for 234 distinct runs.
 
 ## N87 controlled search
 
@@ -29,13 +29,21 @@ duplication in the archive; `manifest.csv` lists 228 rows for 223 distinct runs.
 | HardCutRateGRU, RMS-slope | 0.002, 0.004, 0.006, 0.008, 0.010 |
 | GlobalExpRateGRU, Max-step | 0.002, 0.004, 0.006, 0.008 |
 | GlobalExpRateGRU, RMS-slope | 0.002, 0.004, 0.006, 0.008, 0.010 |
-| Hidden32 | 0.002, 0.004, 0.006, 0.008 |
-| No-H | 0.002, 0.004, 0.006, 0.008 |
+| RateGRU-32 (Hidden32) | 0.002, 0.004, 0.006, 0.008 |
+| RateGRU-NF (No-H) | 0.002, 0.004, 0.006, 0.008 |
+| DtInputGRU, RMS-slope | 0.002, 0.004, 0.006, 0.008, 0.010 |
+| RateGRU-Orig, RMS-slope | 0.002, 0.004, 0.006, 0.008 |
 
 The RateGRU Max-step `lr3=0.010` boundary extension was run after the rest of
 that group, under the same paper protocol and from the same phase-1/2
 checkpoint. Its validation error did not improve on the selected `lr3=0.008`
 result.
+
+DtInputGRU and RateGRU-Orig were added in the revision (folders
+`dtinput_rms_slope/` and `rategru_orig_rms_slope/`). RateGRU-Orig was trained from the original-grid processed split
+(`max_len = 40000`); the server run skipped preprocessing and read that split
+directly, so its own configuration carried the unused default `max_len = 4000`,
+which the archived configurations replace with the value that built the data.
 
 ## Per-material search
 
@@ -73,7 +81,7 @@ therefore indexes the validation columns only. The screening logs stop at epoch
 50 and carry no validation error, because the epoch-50 first-stage training loss
 is what ranks the `lr12` candidates.
 
-Eight of the 228 runs diverge to a non-finite loss during phase 3 and are ended
+Eight of the 239 runs diverge to a non-finite loss during phase 3 and are ended
 by the early-stopping rule; the archive keeps them as they ran. Seven of the
 eight sit at `lr3 = 0.008` or `0.010`, the upper end of the scanned range. In
 seven cases early stopping restores the best weights from before the divergence

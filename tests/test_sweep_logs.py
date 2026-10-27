@@ -23,7 +23,7 @@ def manifest_rows():
 class SweepLogTests(unittest.TestCase):
     def test_manifest_covers_all_logs_and_sanitized_configs(self):
         rows = manifest_rows()
-        self.assertEqual(len(rows), 228)
+        self.assertEqual(len(rows), 239)
         self.assertEqual(len(list(SWEEP_ROOT.rglob("run_*_log.csv"))), len(rows))
         self.assertEqual(len(list(SWEEP_ROOT.rglob("run_*_config.json"))), len(rows))
         self.assertEqual(len({(row["group"], row["run_id"]) for row in rows}), len(rows))
@@ -69,7 +69,7 @@ class SweepLogTests(unittest.TestCase):
                 )
                 self.assertEqual(float(group[0]["lr_12"]), 0.001)
 
-        for folder, expected in (("controlled_n87/", 60), ("ten_materials/", 168)):
+        for folder, expected in (("controlled_n87/", 71), ("ten_materials/", 168)):
             with self.subTest(folder=folder):
                 counted = sum(1 for row in rows if row["group"].startswith(folder))
                 self.assertEqual(counted, expected)

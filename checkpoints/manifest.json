@@ -66,7 +66,39 @@
       "sha256": "d10f66715ea4c409c2fc0e2f851813dd6581111685e96d4a1a23840e5d0fbdf8"
     },
     {
-      "paper_name": "Hidden32",
+      "paper_name": "DtInputGRU",
+      "model_key": "DtInputFixedGRU",
+      "path": "n87_paper_models/dtinputgru/model.pth",
+      "dt_normalization": "std_db_dt",
+      "lr_phase12": 0.001,
+      "lr_phase3": 0.008,
+      "gradient_clip_norm": 20.0,
+      "validation_mean": 4.759,
+      "validation_p95": 8.968,
+      "test_mean": 4.686,
+      "test_p95": 8.882,
+      "resampled_heldout_mean": 3.428,
+      "resampled_heldout_p95": 5.232,
+      "sha256": "01993bddf521f16cbcb3f603dff51c9ccfb08bc65f647350fd05fb6c4d5b7e35"
+    },
+    {
+      "paper_name": "RateGRU-Orig",
+      "model_key": "SoftplusRateExpCapGRU",
+      "path": "n87_paper_models/rategru_orig/model.pth",
+      "dt_normalization": "std_db_dt",
+      "lr_phase12": 0.001,
+      "lr_phase3": 0.004,
+      "gradient_clip_norm": 20.0,
+      "validation_mean": 7.734,
+      "validation_p95": 16.225,
+      "test_mean": 7.544,
+      "test_p95": 15.716,
+      "resampled_heldout_mean": null,
+      "resampled_heldout_p95": null,
+      "sha256": "2db7df8a98d5331ba17bb5f668d4f7970ab5edec36a5c0ed66f1a99c843ee03c"
+    },
+    {
+      "paper_name": "RateGRU-32",
       "model_key": "SoftplusRateExpCapGRUHidden32",
       "path": "n87_paper_models/hidden32/model.pth",
       "dt_normalization": "std_db_dt",
@@ -82,7 +114,7 @@
       "sha256": "028b415fc0b419cf67d631b63d50534f9c7db5728b0e097efe4e203140e35a14"
     },
     {
-      "paper_name": "No-H",
+      "paper_name": "RateGRU-NF",
       "model_key": "SoftplusRateExpCapGRUNoH",
       "path": "n87_paper_models/no_h/model.pth",
       "dt_normalization": "std_db_dt",

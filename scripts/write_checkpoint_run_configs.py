@@ -31,6 +31,8 @@ N87_CHECKPOINT_DIRS = {
     "n87_fixedgru": "fixedgru",
     "n87_dtscaledgru": "dtscaledgru",
     "n87_rategru": "rategru",
+    "n87_dtinputgru": "dtinputgru",
+    "n87_rategru_orig": "rategru_orig",
     "n87_hidden32": "hidden32",
     "n87_no_h": "no_h",
     "n87_dtscaledgru_max_step": "dtscaledgru_max_step",

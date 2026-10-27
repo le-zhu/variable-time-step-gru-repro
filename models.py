@@ -47,27 +47,29 @@ class StandardGRU(DtScaledGRU):
         return h_next, hs_next
 
 
-class DtInputFixedGRU(nn.Module):
-    """Standard GRU update with normalized dt provided as an explicit input feature."""
+class DtInputFixedGRU(DtScaledGRU):
+    """Fixed-update GRU with normalized dt provided as a fifth input feature.
+
+    This is DtInputGRU in the paper. It uses the same hand-written reset-before
+    cell and initialization as the other models; dt enters only the gate and
+    candidate inputs, not the update.
+    """
 
     def __init__(self):
         super().__init__()
-        self.hidden_size = 64
-        self.gru_cell = nn.GRUCell(5, self.hidden_size)
-        self.head = nn.Sequential(
-            nn.Linear(self.hidden_size, 32),
-            nn.SiLU(),
-            nn.Linear(32, 16),
-            nn.SiLU(),
-            nn.Linear(16, 1),
-        )
+        self.gru_wz = nn.Linear(5, self.hidden_size)
+        self.gru_wr = nn.Linear(5, self.hidden_size)
+        self.gru_wh = nn.Linear(5, self.hidden_size)
 
     def forward_step(self, input, h, hs, dt):
         if dt.dim() == 1:
             dt = dt.unsqueeze(1)
         dt = dt.to(device=input.device, dtype=input.dtype)
         gru_input = torch.cat([input, h, dt], dim=1)
-        hs_next = self.gru_cell(gru_input, hs)
+        update_coeff = torch.sigmoid(self.gru_wz(gru_input) + self.gru_uz(hs))
+        r_t = torch.sigmoid(self.gru_wr(gru_input) + self.gru_ur(hs))
+        hs_candidate = torch.tanh(self.gru_wh(gru_input) + self.gru_uh(r_t * hs))
+        hs_next = hs + update_coeff * (hs_candidate - hs)
         h_next = self.head(hs_next)
         return h_next, hs_next
 
